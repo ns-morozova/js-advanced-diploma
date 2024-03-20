@@ -4,6 +4,6 @@ import Swordsman from "../characters/Swordsman";
 import { generateTeam } from "../generators";
 
 test('Проверка функции generateTeam', () => {
-    const team = generateTeam([Bowman, Swordsman, Magician], 3, 4);
-    expect(team.characters.length).toBe(4);
+    const arrTeam = generateTeam([Bowman, Swordsman, Magician], 3, 4);
+    expect(arrTeam.length).toBe(4);
 });

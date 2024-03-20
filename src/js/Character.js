@@ -38,7 +38,6 @@ export default class Character {
 
   levelUp() {
     const healthBefore = this.health;
-    this.level += 1;
     this.health += 80;
 
     if (this.health > 100) {

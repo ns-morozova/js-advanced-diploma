@@ -147,7 +147,6 @@ export default class GameController {
 
 
   setTargetCursor(objPos, index) {
-    this.gamePlay.setCursor(cursors.auto);
     let isCharPlayer = false;
     let isCharRiv = false;
 
@@ -163,6 +162,7 @@ export default class GameController {
     }
 
     if (this.gameState.selected === null) {
+      this.gamePlay.setCursor(cursors.auto);
       return;
     }
 
@@ -177,13 +177,15 @@ export default class GameController {
     if (isCharRiv) {
 
       if (!(this.cellsAttack.find((ind) => ind == index) === undefined)) {
-
         this.gamePlay.selectCell(index, 'red');
         this.gamePlay.setCursor(cursors.crosshair);
+        return;
       } else {
         this.gamePlay.setCursor(cursors.notallowed);
+        return;
       }
     }
+    this.gamePlay.setCursor(cursors.auto);
   }
 
 
@@ -281,11 +283,15 @@ export default class GameController {
       return;
     }
     if (this.gameState.level === 4) {
-      alert('Игра закончена');
+      GamePlay.showMessage(`Игра закончена. Ваш счет: ${this.gameState.teamPlayer.scores}. Счет соперника: ${this.gameState.teamRival.scores}`);
       this.firstInit();
       return;
     }
-    team.characters.forEach((elem) => elem.levelUp());
+    team.characters.forEach((elem) => {
+      elem.level++;
+      elem.levelUp();
+    });
+    team.countingScores(this.gameState.level);
     this.gameState.level++;
     this.gameState.positionedCharacters = [];
     this.gameState.myMove = true;
@@ -307,7 +313,6 @@ export default class GameController {
 
   onCellClick(index) {
     // TODO: react to click
-    
     if (!this.gameState.myMove) {
       return;
     }
@@ -469,7 +474,9 @@ export default class GameController {
 
     this.pointCells = getGameFieldMarkings(this.gamePlay.boardSize);  // координаты
     this.gameState.teamPlayer = new Team();
+    this.gameState.teamPlayer.scores = load.teamPlayer.scores;
     this.gameState.teamRival = new Team();
+    this.gameState.teamRival.scores = load.teamRival.scores;
 
     load.positionedCharacters.forEach((elem) => {
       let char;
